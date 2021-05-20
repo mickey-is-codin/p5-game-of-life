@@ -1,37 +1,42 @@
 import p5 from 'p5';
+import {
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+  FRAMERATE,
+} from './constants';
+import { drawGrid } from './baseGrid';
+import { initialState } from './init';
+import { isInitialFrame, needsNewDraw } from './timing';
+import { toActiveCoords, fillGridSquares } from './gridUtil';
+import { updateState } from './conway';
 import '../css/style.scss';
 
 const sketch = (p) => {
   let canvas;
-  let logo;
-  let logoWidth = 250;
-  let logoHeight = 114;
-
-  p.preload = () => {
-    logo = p.loadImage('assets/p5js.svg');
-  };
+  let state;
 
   p.setup = () => {
-    canvas = p.createCanvas(p.windowWidth, p.windowHeight);
-    p.image(
-      logo,
-      p.windowWidth / 2 - logoWidth / 2,
-      p.windowHeight / 2 - logoHeight / 2
-    );
+    canvas = p.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT, p.P2D);
+    p.frameRate(FRAMERATE);
   };
 
-  p.draw = () => {};
+  p.draw = () => {
+    p.background(255);
+    drawGrid(p);
 
-  p.windowResized = () => {
-    p.resizeCanvas(p.windowWidth, p.windowHeight);
-    p.image(
-      logo,
-      p.windowWidth / 2 - logoWidth / 2,
-      p.windowHeight / 2 - logoHeight / 2
-    );
+    if (isInitialFrame(p.frameCount)) {
+      state = initialState;
+    }
+
+    if (needsNewDraw(p.frameCount)) {
+      state = updateState(state);
+    }
+
+    const activeCoords = toActiveCoords(state);
+
+    fillGridSquares(p, activeCoords);
   };
-
-  p.keyPressed = () => {};
 };
 
 new p5(sketch);
+
