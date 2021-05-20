@@ -5,7 +5,7 @@ import {
   FRAMERATE,
 } from './constants';
 import { drawGrid } from './baseGrid';
-import { initialState } from './init';
+import { toInitialState } from './init';
 import { isInitialFrame, needsNewDraw } from './timing';
 import { toActiveCoords, fillGridSquares } from './gridUtil';
 import { updateState } from './conway';
@@ -25,7 +25,7 @@ const sketch = (p) => {
     drawGrid(p);
 
     if (isInitialFrame(p.frameCount)) {
-      state = initialState;
+      state = toInitialState(p);
     }
 
     if (needsNewDraw(p.frameCount)) {

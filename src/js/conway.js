@@ -1,4 +1,5 @@
 import {
+  toMooreNeighborIxs,
   toNeumannNeighborIxs,
 } from './gridUtil';
 
@@ -23,7 +24,7 @@ export const toImposedRules = (cellState, activeNeighborCount) => {
 
 export const updateState = (state) => {
   return state.map((cellState, ix) => {
-    const neighborIxs = toNeumannNeighborIxs(ix);
+    const neighborIxs = toMooreNeighborIxs(ix);
     const activeNeighborCount = neighborIxs.filter((ix) => state[ix]).length;
     return toImposedRules(cellState, activeNeighborCount);
   });
